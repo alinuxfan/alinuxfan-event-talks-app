@@ -362,9 +362,17 @@ body {
 /* Filter Pills styling */
 .pills-container {
     display: flex;
-    flex-wrap: wrap;
+    overflow-x: auto;
+    white-space: nowrap;
     gap: 8px;
     margin-bottom: 24px;
+    padding-bottom: 4px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.pills-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
 }
 
 .pill {
@@ -377,6 +385,7 @@ body {
     border: 1px solid var(--border-color);
     color: var(--text-muted);
     transition: all var(--transition-fast);
+    flex-shrink: 0;
 }
 
 .pill:hover {
