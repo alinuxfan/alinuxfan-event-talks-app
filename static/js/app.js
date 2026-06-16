@@ -52,11 +52,25 @@ function setupEventListeners() {
         fetchReleaseNotes(true);
     });
 
-    // Search input
+    // Search input (debounced by 100ms to prevent stuttering)
+    const debouncedFilterAndRender = debounce(filterAndRender, 100);
     searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value.trim();
         clearSearchBtn.style.display = searchQuery ? 'flex' : 'none';
-        filterAndRender();
+        debouncedFilterAndRender();
+    });
+
+    // Global keyboard shortcuts: "/" or "Ctrl+K" / "Cmd+K" to focus search
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+            return;
+        }
+        
+        if (e.key === '/' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k')) {
+            e.preventDefault();
+            searchInput.focus();
+            searchInput.select();
+        }
     });
 
     // Clear search
@@ -629,5 +643,16 @@ function showToast(message, type = 'success') {
             toast.remove();
         });
     }, 3500);
+}
+
+// Debounce helper function
+function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
 }
 

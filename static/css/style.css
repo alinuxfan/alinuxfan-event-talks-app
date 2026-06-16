@@ -255,6 +255,34 @@ body {
     color: var(--text-main);
 }
 
+/* Search Shortcut Badge */
+.search-shortcut-badge {
+    position: absolute;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+}
+
+.search-shortcut-badge kbd {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-family: inherit;
+    padding: 2px 6px;
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+}
+
+#search-input:focus ~ .search-shortcut-badge,
+#search-input:not(:placeholder-shown) ~ .search-shortcut-badge {
+    opacity: 0;
+}
+
 .action-buttons {
     display: flex;
     gap: 12px;
