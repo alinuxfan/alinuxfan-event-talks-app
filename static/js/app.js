@@ -93,10 +93,10 @@ function setupEventListeners() {
         }
     });
 
-    // Theme toggle button
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', toggleTheme);
+    // Theme toggle checkbox switch
+    const themeCheckbox = document.getElementById('theme-checkbox');
+    if (themeCheckbox) {
+        themeCheckbox.addEventListener('change', toggleTheme);
     }
 
     // Export to CSV button
@@ -484,35 +484,27 @@ function submitTweet() {
 // Theme handling functions
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
-    const themeToggleBtn = document.getElementById('theme-toggle');
+    const checkbox = document.getElementById('theme-checkbox');
     
     if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
-        if (themeToggleBtn) {
-            const darkIcon = themeToggleBtn.querySelector('.theme-icon-dark');
-            const lightIcon = themeToggleBtn.querySelector('.theme-icon-light');
-            if (darkIcon) darkIcon.style.display = 'none';
-            if (lightIcon) lightIcon.style.display = 'block';
-        }
+        if (checkbox) checkbox.checked = true;
+    } else {
+        document.body.classList.remove('light-theme');
+        if (checkbox) checkbox.checked = false;
     }
 }
 
 function toggleTheme() {
-    const isLight = document.body.classList.toggle('light-theme');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    const checkbox = document.getElementById('theme-checkbox');
+    const isLight = checkbox.checked;
     
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    if (themeToggleBtn) {
-        const darkIcon = themeToggleBtn.querySelector('.theme-icon-dark');
-        const lightIcon = themeToggleBtn.querySelector('.theme-icon-light');
-        
-        if (isLight) {
-            if (darkIcon) darkIcon.style.display = 'none';
-            if (lightIcon) lightIcon.style.display = 'block';
-        } else {
-            if (darkIcon) darkIcon.style.display = 'block';
-            if (lightIcon) lightIcon.style.display = 'none';
-        }
+    if (isLight) {
+        document.body.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+    } else {
+        document.body.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
     }
 }
 
