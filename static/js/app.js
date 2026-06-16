@@ -582,8 +582,9 @@ function exportToCSV() {
     const link = document.createElement('a');
     
     const activeFilterName = currentFilter === 'all' ? 'all' : currentFilter;
+    const today = new Date().toISOString().slice(0, 10);
     link.setAttribute('href', url);
-    link.setAttribute('download', `bigquery_release_notes_${activeFilterName}.csv`);
+    link.setAttribute('download', `bigquery_release_notes_${activeFilterName}_${today}.csv`);
     link.style.visibility = 'hidden';
     
     document.body.appendChild(link);
