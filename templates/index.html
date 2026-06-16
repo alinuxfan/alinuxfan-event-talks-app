@@ -36,7 +36,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                     </svg>
                     <label class="theme-switch" for="theme-checkbox">
-                        <input type="checkbox" id="theme-checkbox">
+                        <input type="checkbox" id="theme-checkbox" role="switch" aria-checked="false" aria-label="Toggle theme (Light mode)">
                         <span class="theme-slider"></span>
                     </label>
                     <svg class="theme-icon-svg theme-icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -66,27 +66,27 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" id="search-input" placeholder="Search release notes by keyword..." autocomplete="off">
+                    <input type="text" id="search-input" placeholder="Search release notes by keyword..." autocomplete="off" aria-label="Search release notes by keyword">
                     <div class="search-shortcut-badge"><kbd>/</kbd></div>
-                    <button id="clear-search" class="clear-search-btn" style="display: none;">&times;</button>
+                    <button id="clear-search" class="clear-search-btn" style="display: none;" aria-label="Clear search input">&times;</button>
                 </div>
                 
                 <div class="action-buttons">
                     <div class="custom-select-wrapper">
-                        <select id="type-filter">
+                        <select id="type-filter" aria-label="Filter release notes by category type">
                             <option value="all">All Types</option>
                             <!-- Dynamically populated options -->
                         </select>
                     </div>
                     
-                    <button id="refresh-btn" class="btn btn-primary" title="Refresh Release Notes">
+                    <button id="refresh-btn" class="btn btn-primary" title="Refresh Release Notes" aria-label="Fetch latest release notes from feed">
                         <svg class="refresh-spinner" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                         </svg>
                         <span>Refresh Feed</span>
                     </button>
                     
-                    <button id="export-btn" class="btn btn-secondary" title="Export Current List to CSV">
+                    <button id="export-btn" class="btn btn-secondary" title="Export Current List to CSV" aria-label="Export currently filtered release notes list to CSV file">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7 10 12 15 17 10"></polyline>
@@ -114,7 +114,7 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h3>Share on X / Twitter</h3>
-                <button class="close-modal-btn" id="close-modal">&times;</button>
+                <button class="close-modal-btn" id="close-modal" aria-label="Close composer modal">&times;</button>
             </div>
             
             <div class="modal-body">
@@ -141,7 +141,7 @@
                     </div>
                     
                     <div class="tweet-composer-area">
-                        <textarea id="tweet-textarea" rows="5" placeholder="What's happening?"></textarea>
+                        <textarea id="tweet-textarea" rows="5" placeholder="What's happening?" aria-label="Tweet composer edit area"></textarea>
                     </div>
                     
                     <!-- Character count indicator inside the mock tweet -->
@@ -154,9 +154,9 @@
                             <span id="char-count" class="char-count-text">280</span>
                         </div>
                         
-                        <button id="auto-trim-btn" class="btn-auto-trim" style="display: none;" title="Automatically trim description text to fit 280 character limit">Auto-Trim</button>
+                        <button id="auto-trim-btn" class="btn-auto-trim" style="display: none;" title="Automatically trim description text to fit 280 character limit" aria-label="Auto-trim tweet description text to fit character limit">Auto-Trim</button>
                         
-                        <button id="submit-tweet-btn" class="btn btn-x-post">
+                        <button id="submit-tweet-btn" class="btn btn-x-post" aria-label="Publish tweet on X">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                             </svg>

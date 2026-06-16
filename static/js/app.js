@@ -392,14 +392,14 @@ function filterAndRender() {
                     <span class="release-date">${note.date}</span>
                 </div>
                 <div class="card-actions">
-                    <button class="btn-card-action copy-btn" data-id="${note.id}">
+                    <button class="btn-card-action copy-btn" data-id="${note.id}" aria-label="Copy ${note.type} update from ${note.date} to clipboard">
                         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                         </svg>
                         <span>Copy</span>
                     </button>
-                    <button class="btn-card-action tweet-btn" data-id="${note.id}">
+                    <button class="btn-card-action tweet-btn" data-id="${note.id}" aria-label="Share this ${note.type} update from ${note.date} on X">
                         <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                         </svg>
@@ -519,10 +519,16 @@ function initTheme() {
     
     if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
-        if (checkbox) checkbox.checked = true;
+        if (checkbox) {
+            checkbox.checked = true;
+            checkbox.setAttribute('aria-checked', 'true');
+        }
     } else {
         document.body.classList.remove('light-theme');
-        if (checkbox) checkbox.checked = false;
+        if (checkbox) {
+            checkbox.checked = false;
+            checkbox.setAttribute('aria-checked', 'false');
+        }
     }
 }
 
@@ -533,9 +539,11 @@ function toggleTheme() {
     if (isLight) {
         document.body.classList.add('light-theme');
         localStorage.setItem('theme', 'light');
+        if (checkbox) checkbox.setAttribute('aria-checked', 'true');
     } else {
         document.body.classList.remove('light-theme');
         localStorage.setItem('theme', 'dark');
+        if (checkbox) checkbox.setAttribute('aria-checked', 'false');
     }
 }
 
