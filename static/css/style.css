@@ -852,6 +852,28 @@ mark.highlight {
     color: #f4212e;
 }
 
+/* Auto-Trim Button */
+.btn-auto-trim {
+    background-color: transparent;
+    border: 1px solid #536471;
+    color: #1d9bf0;
+    border-radius: 9999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-auto-trim:hover {
+    background-color: rgba(29, 155, 240, 0.08);
+    border-color: rgba(29, 155, 240, 0.3);
+}
+
+.btn-auto-trim:active {
+    transform: scale(0.95);
+}
+
 /* Post Button */
 .btn-x-post {
     background-color: #eff3f4;

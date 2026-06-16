@@ -24,6 +24,7 @@ const tweetTextarea = document.getElementById('tweet-textarea');
 const charCountText = document.getElementById('char-count');
 const charProgressCircle = document.getElementById('char-progress');
 const submitTweetBtn = document.getElementById('submit-tweet-btn');
+const autoTrimBtn = document.getElementById('auto-trim-btn');
 const closeModalBtn = document.getElementById('close-modal');
 
 // Color mapping for types
@@ -99,6 +100,11 @@ function setupEventListeners() {
 
     // Submit Tweet
     submitTweetBtn.addEventListener('click', submitTweet);
+
+    // Auto-Trim Tweet
+    if (autoTrimBtn) {
+        autoTrimBtn.addEventListener('click', autoTrimTweet);
+    }
 
     // Keyboard ESC to close modal
     document.addEventListener('keydown', (e) => {
@@ -479,11 +485,15 @@ function updateTweetCharacterCount() {
     if (remaining < 0) {
         charCountText.classList.add('danger');
         charProgressCircle.style.stroke = '#f4212e'; // Red
-    } else if (remaining <= 20) {
-        charCountText.classList.add('warning');
-        charProgressCircle.style.stroke = '#ffd400'; // Yellow
+        if (autoTrimBtn) autoTrimBtn.style.display = 'inline-block';
     } else {
-        charProgressCircle.style.stroke = '#1d9bf0'; // Twitter Blue
+        if (autoTrimBtn) autoTrimBtn.style.display = 'none';
+        if (remaining <= 20) {
+            charCountText.classList.add('warning');
+            charProgressCircle.style.stroke = '#ffd400'; // Yellow
+        } else {
+            charProgressCircle.style.stroke = '#1d9bf0'; // Twitter Blue
+        }
     }
 }
 
@@ -655,5 +665,33 @@ function debounce(func, delay) {
             func.apply(this, args);
         }, delay);
     };
+}
+
+// Auto-trim tweet text to fit the 280-character limit
+function autoTrimTweet() {
+    if (!activeTweetData) return;
+    
+    const note = activeTweetData;
+    let emoji = '📢';
+    if (note.type.toLowerCase() === 'feature') emoji = '🚀';
+    if (note.type.toLowerCase() === 'issue') emoji = '⚠️';
+    if (note.type.toLowerCase() === 'deprecation') emoji = '🛑';
+    if (note.type.toLowerCase() === 'changed') emoji = '⚙️';
+    
+    const header = `${emoji} BigQuery ${note.type} (${note.date}):\n\n`;
+    const footer = `\n\nRead more details here:\n${note.link || 'https://cloud.google.com/bigquery'}`;
+    
+    // Calculate allowable space for the description body
+    const maxBodyLength = 280 - header.length - footer.length;
+    
+    if (maxBodyLength > 3) {
+        // Truncate description text, append ellipsis, and rebuild draft
+        const trimmedBody = note.text_content.substring(0, maxBodyLength - 3).trim() + '...';
+        tweetTextarea.value = header + trimmedBody + footer;
+        updateTweetCharacterCount();
+        showToast('Draft truncated to fit X character limits.', 'info');
+    } else {
+        showToast('Unable to auto-trim: link/headers exceed 280 characters.', 'error');
+    }
 }
 
