@@ -12,6 +12,7 @@ const clearSearchBtn = document.getElementById('clear-search');
 const typeFilterSelect = document.getElementById('type-filter');
 const typePillsContainer = document.getElementById('type-pills');
 const refreshBtn = document.getElementById('refresh-btn');
+const exportBtn = document.getElementById('export-btn');
 const statCount = document.getElementById('stat-count');
 const statTime = document.getElementById('stat-time');
 const statSource = document.getElementById('stat-source');
@@ -96,6 +97,11 @@ function setupEventListeners() {
     const themeToggleBtn = document.getElementById('theme-toggle');
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', toggleTheme);
+    }
+
+    // Export to CSV button
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportToCSV);
     }
 }
 
@@ -359,8 +365,15 @@ function filterAndRender() {
                     <span class="release-date">${note.date}</span>
                 </div>
                 <div class="card-actions">
+                    <button class="btn-card-action copy-btn" data-id="${note.id}">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span>Copy</span>
+                    </button>
                     <button class="btn-card-action tweet-btn" data-id="${note.id}">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                         </svg>
                         <span>Tweet</span>
@@ -372,7 +385,10 @@ function filterAndRender() {
             </div>
         `;
 
-        // Add event listener to the Tweet button inside card
+        // Add event listener to the buttons inside card
+        const copyBtn = card.querySelector('.copy-btn');
+        copyBtn.addEventListener('click', () => copyToClipboard(note, copyBtn));
+
         const tweetBtn = card.querySelector('.tweet-btn');
         tweetBtn.addEventListener('click', () => openTweetModal(note));
 
@@ -498,5 +514,63 @@ function toggleTheme() {
             if (lightIcon) lightIcon.style.display = 'none';
         }
     }
+}
+
+// Utility Functions: Copy to Clipboard and Export to CSV
+function copyToClipboard(note, button) {
+    navigator.clipboard.writeText(note.text_content).then(() => {
+        const span = button.querySelector('span');
+        const originalText = span.textContent;
+        span.textContent = 'Copied!';
+        button.style.pointerEvents = 'none';
+        
+        // Restore button state after 2 seconds
+        setTimeout(() => {
+            span.textContent = originalText;
+            button.style.pointerEvents = 'auto';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+function exportToCSV() {
+    if (filteredNotes.length === 0) {
+        alert('No data to export.');
+        return;
+    }
+    
+    // CSV Headers
+    const headers = ['Date', 'Type', 'Description', 'Link'];
+    
+    // Map entries to CSV format
+    const rows = filteredNotes.map(note => {
+        return [
+            note.date,
+            note.type,
+            note.text_content,
+            note.link || ''
+        ].map(val => {
+            // Escape double quotes by doubling them and wrap field in double quotes
+            const escaped = val.replace(/"/g, '""');
+            return `"${escaped}"`;
+        }).join(',');
+    });
+    
+    const csvContent = [headers.join(','), ...rows].join('\n');
+    
+    // Create Blob and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    const activeFilterName = currentFilter === 'all' ? 'all' : currentFilter;
+    link.setAttribute('href', url);
+    link.setAttribute('download', `bigquery_release_notes_${activeFilterName}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 

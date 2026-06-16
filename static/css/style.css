@@ -332,6 +332,23 @@ body {
     transform: translateY(0);
 }
 
+.btn-secondary {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-input-focus);
+    border-color: var(--border-color-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
 /* Spinner Animation */
 .refresh-spinner.spinning {
     animation: spin 1s linear infinite;
@@ -481,6 +498,12 @@ mark.highlight {
     color: #1d9bf0;
     border-color: rgba(29, 155, 240, 0.3);
     background-color: rgba(29, 155, 240, 0.08);
+}
+
+.btn-card-action.copy-btn:hover {
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+    background-color: rgba(16, 185, 129, 0.08);
 }
 
 /* Rich text rendering inside cards */
