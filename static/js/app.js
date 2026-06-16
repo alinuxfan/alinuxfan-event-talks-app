@@ -133,12 +133,19 @@ async function fetchReleaseNotes(forceRefresh = false) {
             
             // Render
             filterAndRender();
+
+            // Toast confirmation on manual refresh
+            if (forceRefresh) {
+                showToast('Release notes feed updated successfully!', 'success');
+            }
         } else {
             showErrorState(data.error || 'Failed to fetch release notes.');
+            showToast(data.error || 'Failed to fetch release notes.', 'error');
         }
     } catch (error) {
         console.error('Error fetching release notes:', error);
         showErrorState('Network error. Make sure the server is running.');
+        showToast('Network error: Failed to connect to server.', 'error');
     } finally {
         spinner.classList.remove('spinning');
         refreshBtn.disabled = false;
@@ -516,6 +523,9 @@ function copyToClipboard(note, button) {
         span.textContent = 'Copied!';
         button.style.pointerEvents = 'none';
         
+        // Show non-intrusive toast notification
+        showToast('Copied release note to clipboard.', 'success');
+        
         // Restore button state after 2 seconds
         setTimeout(() => {
             span.textContent = originalText;
@@ -523,12 +533,13 @@ function copyToClipboard(note, button) {
         }, 2000);
     }).catch(err => {
         console.error('Failed to copy text: ', err);
+        showToast('Failed to copy text to clipboard.', 'error');
     });
 }
 
 function exportToCSV() {
     if (filteredNotes.length === 0) {
-        alert('No data to export.');
+        showToast('No data available to export.', 'info');
         return;
     }
     
@@ -564,5 +575,59 @@ function exportToCSV() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Show toast feedback
+    showToast(`Exported ${filteredNotes.length} updates to CSV successfully!`, 'success');
+}
+
+// Toast Notification System
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    // Set appropriate icon
+    let iconSvg = '';
+    if (type === 'success') {
+        iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>`;
+    } else if (type === 'info') {
+        iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>`;
+    } else if (type === 'error') {
+        iconSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>`;
+    }
+    
+    toast.innerHTML = `
+        <span class="toast-icon">${iconSvg}</span>
+        <span class="toast-message">${message}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // Animate out and remove
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        toast.addEventListener('transitionend', () => {
+            toast.remove();
+        });
+    }, 3500);
 }
 
